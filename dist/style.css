@@ -6,3 +6,6 @@
 
 /* Vector arrows avoid emoji substitution in mobile browsers. */
 .arrow-ne{display:inline-block;width:1em;height:1em;vertical-align:-.12em;color:inherit}.contact h2>span .arrow-ne{width:1em;height:1em;vertical-align:0}.location-art .arrow-ne{width:1em;height:1em}
+
+/* Shared SVG arrows: never use font glyphs for decorative icons. */
+.arrow-icon{display:inline-block;width:1em;height:1em;vertical-align:-.12em;color:inherit;flex-shrink:0}
