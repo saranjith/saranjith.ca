@@ -6,3 +6,8 @@
 
 /* Use SVG icons, never font glyphs that mobile browsers can render as emoji. */
 .arrow-ne,.arrow-icon{display:inline-block;width:1em;height:1em;vertical-align:-.12em;color:inherit;flex-shrink:0}.contact h2>span .arrow-ne{vertical-align:0}
+
+/* Tools: an editorial list, with room for purpose as well as names. */
+.tools-section{padding-top:40px}.tool-list{margin:40px 0 0}.tool-list>div{display:grid;grid-template-columns:1fr 1fr;gap:40px;border-top:1px solid var(--line);padding:25px 0}.tool-list>div:last-child{border-bottom:1px solid var(--line)}.tool-list dt{font-family:Manrope,sans-serif;font-size:25px;letter-spacing:-.8px;font-weight:500}.tool-list dt small{display:block;font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:0;color:var(--muted);margin-top:4px}.tool-list dd{margin:0;color:var(--muted);font-size:14px;line-height:1.7}.tool-list dd span{display:block;color:var(--ink);font-size:10px;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px}@media(max-width:700px){.tools-section{padding-top:20px}.tool-list>div{grid-template-columns:1fr;gap:12px;padding:22px 0}.tool-list dt{font-size:23px}.tool-list dt small{display:inline;margin-left:8px}}
+
+.tool-list dt{display:flex;align-items:center;gap:16px}.tool-icon{display:block;width:28px;height:28px;object-fit:contain;flex-shrink:0}.tool-icon-github{background:#fff;border-radius:50%;padding:2px}@media(max-width:700px){.tool-list dt{gap:12px}.tool-icon{width:24px;height:24px}}
