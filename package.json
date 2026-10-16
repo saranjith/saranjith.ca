@@ -1,0 +1,14 @@
+{
+  "name": "saranjith.ca",
+  "version": "1.0.0",
+  "description": "Saranjith Suresh Kumar - Personal website",
+  "private": true,
+  "scripts": {
+    "preview": "python3 -m http.server 4174 --bind 127.0.0.1 --directory dist"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  },
+  "author": "Saranjith Suresh Kumar",
+  "license": "UNLICENSED"
+}
