@@ -2,8 +2,6 @@
 
 Current page: Introduction → Approach → About → Contact.
 
-## Preview
-From this folder run `python3 -m http.server 4174 --bind 127.0.0.1 --directory dist` and open http://127.0.0.1:4174/.
 
 ## Edit
 - `dist/index.html`: page copy, navigation, contact and SEO.
