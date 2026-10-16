@@ -24,3 +24,6 @@ __pycache__/
 
 # Local preview launcher
 Preview.command
+
+#agentic
+.openai/
