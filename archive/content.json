@@ -1,0 +1,91 @@
+{
+  "projects": [
+    {
+      "id": "enterprise",
+      "type": "Product design",
+      "title": "Clarity in complex systems.",
+      "subtitle": "Enterprise UX \u00b7 BeyondTrust",
+      "description": "My current chapter: UX design at BeyondTrust, working in enterprise cybersecurity SaaS. I\u2019m interested in the details that make complex tools feel understandable.",
+      "note": "Senior UX Designer since July 2024, following a UX Designer role from September 2021. For a conversation about my approach to enterprise design, get in touch.",
+      "visual": "system",
+      "tags": [
+        "Enterprise UX",
+        "Interaction design",
+        "Design systems"
+      ]
+    },
+    {
+      "id": "powerme",
+      "type": "Product design",
+      "title": "Making information actionable.",
+      "subtitle": "PowerMe \u00b7 Enquero",
+      "description": "Dashboard Studio, context-aware notifications, and a reworked lineage diagram: three ways into the challenge of making enterprise data easier to use.",
+      "note": "As Associate Product Manager \u2013 UX at Enquero (2020\u20132021), I worked on product concepts, prototypes and user feedback. My LinkedIn export describes introducing Dashboard Studio and context-aware notifications, and revamping the lineage diagram for PowerMe 2.0.",
+      "visual": "data",
+      "tags": [
+        "Information architecture",
+        "Prototyping",
+        "Product thinking"
+      ]
+    },
+    {
+      "id": "trivandrum",
+      "type": "Side projects",
+      "title": "A little closer to home.",
+      "subtitle": "Trivandrum Eats",
+      "description": "A side project with Trivandrum at its heart. A place for my curiosity about food, local discovery, and the city I come from.",
+      "note": "Trivandrum Eats is part of my independent project collection. Want to hear more about the idea? Let\u2019s talk.",
+      "visual": "eats",
+      "tags": [
+        "Local discovery",
+        "Independent project"
+      ]
+    },
+    {
+      "id": "lab",
+      "type": "Side projects",
+      "title": "An idea is better when it works.",
+      "subtitle": "SunCycle \u00b7 Figma plugins \u00b7 Split My Check",
+      "description": "Small tools, playful experiments, and ideas made tangible. My space to connect design decisions with working prototypes.",
+      "note": "My independent explorations include SunCycle, Figma plugins, and Split My Check. They reflect an ongoing interest in making things as well as designing them. Contact me for more about individual projects.",
+      "visual": "lab",
+      "tags": [
+        "Design engineering",
+        "Creative coding",
+        "Prototyping"
+      ]
+    }
+  ],
+  "timeline": [
+    [
+      "2021 \u2014 Now",
+      "BeyondTrust",
+      "Senior UX Designer \u00b7 previously UX Designer"
+    ],
+    [
+      "2021",
+      "Bombardier",
+      "UX Specialist"
+    ],
+    [
+      "2020 \u2014 2021",
+      "Enquero",
+      "Associate Product Manager \u2013 UX"
+    ],
+    [
+      "2016 \u2014 2020",
+      "Attinad Software",
+      "UX Architect \u00b7 previously UX Consultant"
+    ],
+    [
+      "2015 \u2014 2016",
+      "EY",
+      "Experience Designer"
+    ],
+    [
+      "2011 \u2014 2015",
+      "Engineering foundations",
+      "Antzcamp Information Systems \u00b7 Deep Thought Systems"
+    ]
+  ]
+}

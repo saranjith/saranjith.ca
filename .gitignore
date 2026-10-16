@@ -1,0 +1,26 @@
+# macOS and editor files
+.DS_Store
+._*
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local secrets (keep example configuration trackable)
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Dependencies, caches, and logs
+node_modules/
+__pycache__/
+*.py[cod]
+.cache/
+*.log
+
+# dist/ contains the website source and must remain tracked.
+
+# Local preview launcher
+Preview.command
