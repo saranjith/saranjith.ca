@@ -1,5 +1,5 @@
 const themeButton=document.querySelector('#theme');function syncTheme(){const dark=document.documentElement.dataset.theme==='dark';themeButton.setAttribute('aria-label',`Switch to ${dark?'light':'dark'} mode`);themeButton.setAttribute('aria-pressed',String(dark))}syncTheme();themeButton.addEventListener('click',()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem('theme',document.documentElement.dataset.theme)}catch(e){}syncTheme()});document.querySelector('#year').textContent=new Date().getFullYear();
-fetch('content.json')
+if (document.querySelector('#timeline')) fetch('content.json')
   .then(response => { if (!response.ok) throw new Error('Content unavailable'); return response.json(); })
   .then(content => {
     const timeline = document.querySelector('#timeline');
