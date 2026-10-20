@@ -44,8 +44,8 @@ if (year) year.textContent = new Date().getFullYear();
     const x = innerWidth / 2 - (rect.left + rect.width / 2);
     const y = innerHeight / 2 - (rect.top + rect.height / 2);
     animations.push(art.animate([
-      {transform: `translate(${x}px, ${y}px) rotate(-12deg)`},
-      {transform: 'translate(0, 0) rotate(-12deg)'}
+      {transform: `translate(${x}px, ${y}px) rotate(0deg)`},
+      {transform: 'translate(0, 0) rotate(0deg)'}
     ], {duration: 1500, delay: 2300, easing: 'cubic-bezier(.25,.75,.35,1)', fill: 'both'}));
     root.classList.add('intro-running');
     const content = document.querySelectorAll('body>header, .hero>.eyebrow, .hero-copy, .hero-foot, main>section:not(.hero), body>footer');
