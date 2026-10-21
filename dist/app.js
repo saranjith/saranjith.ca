@@ -62,3 +62,90 @@ if (year) year.textContent = new Date().getFullYear();
     motion.addEventListener('change', finish, {once:true});
   } catch { finish(); }
 })();
+
+// Keep each artwork plane visually continuous between its hero position and process step.
+(() => {
+  const hero = document.querySelector('.hero');
+  const art = hero?.querySelector('.field-diagram');
+  const approach = document.querySelector('#approach');
+  const sources = [...(art?.querySelectorAll('.field-plane') || [])];
+  const destinations = [...(approach?.querySelectorAll('.process-landing svg') || [])];
+  if (!hero || !art || !approach || sources.length !== 4 || destinations.length !== 4) return;
+
+  const motion = matchMedia('(min-width: 800px) and (prefers-reduced-motion: no-preference)');
+  const svgNS = 'http://www.w3.org/2000/svg';
+  let planes = [];
+  let frame = 0;
+  let active = false;
+  const targetViews = destinations.map(svg => svg.getAttribute('viewBox').split(/\s+/).map(Number));
+  const sourcePositions = sources.map(source => {
+    const values = source.querySelector('g')?.getAttribute('transform')?.match(/translate\(([-\d.]+)\s+([-\d.]+)\)/);
+    return values ? {x: Number(values[1]), y: Number(values[2])} : {x: 0, y: 0};
+  });
+  const sourceView = art.getAttribute('viewBox').split(/\s+/).map(Number);
+  const clamp = value => Math.max(0, Math.min(1, value));
+  const interpolate = (from, to, progress) => from + (to - from) * progress;
+
+  function draw() {
+    frame = 0;
+    if (!active) return;
+    const origin = art.getBoundingClientRect();
+    const annotations = art.querySelectorAll('.step-annotation');
+    const heroEnd = hero.getBoundingClientRect().bottom + scrollY;
+    const approachStart = approach.getBoundingClientRect().top + scrollY;
+    const start = Math.max(0, heroEnd - innerHeight * .8);
+    const end = Math.max(start + 220, approachStart - innerHeight * .2);
+    const progress = clamp((scrollY - start) / (end - start));
+    const eased = progress * progress * (3 - 2 * progress);
+    planes.forEach((plane, index) => {
+      const target = destinations[index].getBoundingClientRect();
+      if (annotations[index]) annotations[index].style.opacity = String(1 - eased);
+      plane.setAttribute('viewBox', sourceView.map((value, part) => interpolate(value, targetViews[index][part], eased)).join(' '));
+      const inner = plane.querySelector('.field-plane > g');
+      if (inner) {
+        const {x, y} = sourcePositions[index];
+        const turn = clamp((eased - .55) / .45);
+        inner.setAttribute('transform', `translate(${x} ${y}) skewY(${30 * (1 - turn)})`);
+      }
+      plane.style.width = `${interpolate(origin.width, target.width, eased)}px`;
+      plane.style.height = `${interpolate(origin.height, target.height, eased)}px`;
+      const fan = -Math.sin(Math.PI * eased) * (80 + index * 22);
+      plane.style.transform = `translate3d(${interpolate(origin.left, target.left, eased) + fan}px,${interpolate(origin.top, target.top, eased)}px,0)`;
+    });
+  }
+  function schedule() { if (!frame) frame = requestAnimationFrame(draw); }
+  function stop() {
+    active = false;
+    document.documentElement.classList.remove('journey-active');
+    planes.forEach(plane => plane.remove());
+    art.querySelectorAll('.step-annotation').forEach(annotation => annotation.style.removeProperty('opacity'));
+    planes = [];
+    cancelAnimationFrame(frame);
+    frame = 0;
+  }
+  function sync() {
+    if (!motion.matches || document.documentElement.classList.contains('intro-pending') || document.documentElement.classList.contains('intro-running')) {
+      if (active) stop();
+      return;
+    }
+    if (!active) {
+      planes = sources.map(source => {
+        const plane = document.createElementNS(svgNS, 'svg');
+        plane.setAttribute('class', 'journey-plane');
+        plane.setAttribute('viewBox', art.getAttribute('viewBox'));
+        plane.setAttribute('aria-hidden', 'true');
+        plane.append(source.cloneNode(true));
+        document.body.append(plane);
+        return plane;
+      });
+      active = true;
+      document.documentElement.classList.add('journey-active');
+    }
+    schedule();
+  }
+  addEventListener('scroll', schedule, {passive:true});
+  addEventListener('resize', sync);
+  motion.addEventListener('change', sync);
+  new MutationObserver(sync).observe(document.documentElement, {attributes:true,attributeFilter:['class']});
+  sync();
+})();

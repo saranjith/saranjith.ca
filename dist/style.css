@@ -165,3 +165,61 @@ html[data-theme=dark] .seasonal-decoration{background-image:url('assets/brand/se
 .not-found-footer{width:88%;max-width:1267px;display:flex;justify-content:space-between;gap:24px;border-top:1px solid var(--line);padding:24px 0 28px;color:var(--muted);font-size:11px}
 .not-found-footer a{display:inline-flex;align-items:center;gap:6px}
 @media(max-width:700px){.not-found-main{padding-top:10vh}.not-found-content{display:block}.not-found-content h1{font-size:clamp(56px,14vw,80px);margin:46px 0 24px}.not-found-art{margin-top:56px}.not-found-art svg{width:130px}.not-found-footer{flex-wrap:wrap}}
+
+/* Compact tool identities within the approach panel. */
+.hero-copy .current strong{margin-bottom:0}
+.timeline-row>span{font-size:12px}
+.timeline-row strong{font-size:14px}
+.timeline-row p{font-size:12px}
+.approach-tools{border-top:1px solid var(--line);margin-top:30px;padding-top:24px}
+.approach-tools h3{font:600 10px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.4px;text-transform:uppercase;margin:0 0 20px}
+.approach-tools ul{list-style:none;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 28px;margin:0;padding:0}
+.approach-tools li{display:inline-flex;align-items:center;gap:10px;font:500 15px/1.3 Manrope,sans-serif;white-space:nowrap}
+.approach-tools img{display:block;width:28px;height:28px;object-fit:contain;flex:none;transition:filter .3s ease}
+@media(max-width:700px){.approach-tools ul{justify-content:flex-start;gap:22px 30px}.approach-tools li{font-size:14px}.approach-tools img{width:24px;height:24px}}
+
+/* Experience summary follows the introductory bio. */
+.experience-summary{margin-top:45px}
+.experience-row{display:grid;grid-template-columns:100px minmax(0,1fr);gap:10px;border-top:1px solid var(--line);padding:18px 0}
+.experience-row>span{font:400 12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);padding-top:2px}
+.experience-row strong{display:block;font-size:14px;font-weight:600}
+.experience-row p{font-size:12px;line-height:1.6;margin:4px 0 0}
+.experience-row:last-child p{font-size:14px;color:var(--ink);margin:0}
+.contact h2{font-size:62px}
+@media(max-width:700px){.contact h2{font-size:clamp(44px,10vw,62px)}}
+
+.about{padding-bottom:50px}
+.about + .approach{margin-top:40px}
+@media(max-width:700px){.about{padding-bottom:36px}.about + .approach{margin-top:28px}}
+
+/* Keep tool marks in the site's monochrome palette. */
+.approach-tools img:not([src$="github.svg"]){filter:grayscale(1) brightness(.75)}
+html[data-theme=dark] .approach-tools img:not([src$="github.svg"]){filter:grayscale(1) brightness(1.25)}
+.approach-tools img[src$="github.svg"]{background:#fff;border-radius:50%;padding:2px;filter:grayscale(1)}
+
+@media(hover:hover){.approach-tools li:hover img:not([src$="github.svg"]),html[data-theme=dark] .approach-tools li:hover img:not([src$="github.svg"]){filter:none}}
+@media(prefers-reduced-motion:reduce){.approach-tools img{transition:none}}
+
+/* The four drawings travel from the hero to their matching process steps. */
+.process-steps{list-style:none;margin:28px 0 0;padding:0}
+.process-step{display:grid;grid-template-columns:minmax(0,1fr) 180px;grid-template-rows:auto 1fr;column-gap:22px;align-items:center;min-height:148px;padding:12px 0;border-top:1px solid var(--line)}
+.process-index{grid-column:1;font:600 11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.5px;color:var(--accent)}
+.process-step>p{grid-column:1;font:500 clamp(27px,3.3vw,48px)/1.12 Manrope,sans-serif;letter-spacing:-.055em;margin:0}
+.process-landing{grid-column:2;grid-row:1/3;width:180px;justify-self:end;pointer-events:none}
+.process-landing svg{display:block;width:100%;height:auto;overflow:visible;color:var(--muted)}
+.approach .approach-tools{margin-top:18px}
+.journey-active .hero-art .field-plane,.journey-active .process-landing svg{opacity:0}
+.journey-plane{position:fixed;left:0;top:0;display:block;overflow:visible;pointer-events:none;z-index:4;color:var(--muted);will-change:transform,width,height}
+@media(max-width:799px){.process-step{grid-template-columns:minmax(0,1fr) 105px;min-height:118px;column-gap:8px}.process-step>p{font-size:clamp(23px,6vw,33px)}.process-index{font-size:9px}.process-landing{width:105px}}
+@media(prefers-reduced-motion:reduce){.journey-plane{display:none}}
+
+@media(min-width:800px){.process-step{grid-template-columns:minmax(0,1fr) 250px}.process-landing{width:250px}}
+@media(max-width:700px){header nav .nav-secondary{display:inline}header nav{font-size:11px;gap:8px}}
+@media(max-width:360px){.wordmark[data-season]{width:105px;height:36px}header nav{font-size:10px;gap:6px}#theme{width:34px;height:34px}}
+
+/* Compact process rows place each drawing before its label and statement. */
+.process-step{grid-template-columns:100px minmax(0,1fr);grid-template-rows:auto auto;column-gap:26px;min-height:142px;padding:6px 0}
+.process-landing,.process-step .process-landing{grid-column:1;grid-row:1/3;width:80px;justify-self:start}
+.process-index,.process-step>p{grid-column:2}
+@media(min-width:800px){.process-step{grid-template-columns:100px minmax(0,1fr)}.process-landing{width:80px}}
+@media(max-width:799px){.process-step{grid-template-columns:72px minmax(0,1fr);min-height:112px;column-gap:14px}.process-landing,.process-step .process-landing{width:62px}}
