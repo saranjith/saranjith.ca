@@ -2,6 +2,17 @@
 
 Static HTML, CSS and JavaScript. The homepage contains Introduction, Approach, About, Tools and Contact.
 
+## Favicon
+### The Carrier - Carrying my roots forward.
+
+The Carrier brings together two places that shape my story: Kerala and Canada. Its boat draws on the vallam and the canoe, joined in a single silhouette carried by a figure in motion.
+
+The idea is personal: moving somewhere new doesn’t mean leaving your roots behind. You carry your experiences, culture, and perspective with you—and they shape what you create next.
+
+The walking figure represents that ongoing journey. The purple accent gives the mark a distinctive point of recognition, while the bold silhouette and restrained detail lend it a timeless, slightly retro character.
+
+For my portfolio, The Carrier is a reminder that my work moves forward with everything I bring to it.
+
 ## Preview
 Run `npm run preview` and open http://127.0.0.1:4174/.
 The Python server previews files only; Vercel redirects, headers, analytics endpoints and custom 404 status handling require a Vercel deployment.
