@@ -18,6 +18,16 @@ systemTheme.addEventListener('change', event => {
 const year = document.querySelector('#year');
 if (year) year.textContent = new Date().getFullYear();
 
+const emailButton = document.querySelector('[data-email-action]');
+if (emailButton) emailButton.hidden = false;
+emailButton?.addEventListener('click', () => {
+  // Assemble the address only after a person asks to email; keep it out of HTML.
+  const local = ['con', 'tact'].join('');
+  const domain = ['saran', 'jith', '.ca'].join('');
+  window.location.href = `mailto:${local}@${domain}`;
+});
+
+
 
 // First visit in this tab only. Hash links and reduced motion open directly.
 (() => {
