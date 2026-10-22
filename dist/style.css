@@ -315,3 +315,12 @@ html[data-theme=dark] .approach-tools img:not([src$="github.svg"]){filter:graysc
 .hero{min-height:calc(100svh - 132px);display:flex;flex-direction:column}
 .hero-foot{margin-top:auto}
 .approach{margin-top:0}
+
+/* On small screens the travelling diagram passes behind the hero copy. */
+@media(max-width:999px){.hero-copy{position:relative;z-index:2}}
+
+/* Give the current-role line room before the mobile hero footer. */
+@media(max-width:700px){.hero-layout{margin-bottom:40px}}
+
+/* The mobile handoff also travels behind the hero footer divider and copy. */
+.hero-foot{background:var(--bg)}

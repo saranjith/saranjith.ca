@@ -142,7 +142,7 @@ emailButton?.addEventListener('click', () => {
   const source = document.querySelector('.hero-art .field-diagram');
   const target = document.querySelector('.process-map-diagram');
   if (!source || !target) return;
-  const motion = matchMedia('(min-width: 1000px) and (prefers-reduced-motion: no-preference)');
+  const motion = matchMedia('(prefers-reduced-motion: no-preference)');
   const moving = source.cloneNode(true);
   moving.classList.remove('field-diagram');
   moving.classList.add('process-plane-handoff');
@@ -163,8 +163,9 @@ emailButton?.addEventListener('click', () => {
     const targetBox = target.getBoundingClientRect();
     const sourceBottom = sourceBox.bottom + scrollY;
     const targetTop = targetBox.top + scrollY;
-    const start = sourceBottom - innerHeight * .6;
-    const end = Math.max(start + 240, targetTop - innerHeight * .45);
+    const narrow = innerWidth < 1000;
+    const start = Math.max(0, sourceBottom - innerHeight * (narrow ? .25 : .6));
+    const end = Math.max(start + 240, targetTop - innerHeight * (narrow ? .55 : .45));
     const progress = clamp((scrollY - start) / (end - start));
     if (progress <= 0) {
       source.style.removeProperty('opacity');
@@ -183,9 +184,15 @@ emailButton?.addEventListener('click', () => {
     source.style.opacity = '0';
     target.style.opacity = '0';
     moving.style.display = 'block';
-    moving.style.width = `${lerp(sourceBox.width, targetBox.width)}px`;
-    moving.style.height = `${lerp(sourceBox.height, targetBox.height)}px`;
-    moving.style.transform = `translate3d(${lerp(sourceBox.left, targetBox.left)}px,${lerp(sourceBox.top, targetBox.top)}px,0)`;
+    const rail = narrow ? Math.sin(Math.PI * eased) : 0;
+    const width = lerp(sourceBox.width, targetBox.width) * (1 - .68 * rail);
+    const height = lerp(sourceBox.height, targetBox.height) * (1 - .68 * rail);
+    const directX = lerp(sourceBox.left, targetBox.left);
+    const x = directX + (innerWidth - width - 12 - directX) * rail;
+    moving.style.width = `${width}px`;
+    moving.style.height = `${height}px`;
+    moving.style.opacity = String(1 - .2 * rail);
+    moving.style.transform = `translate3d(${x}px,${lerp(sourceBox.top, targetBox.top)}px,0)`;
   }
   function schedule() { if (!frame) frame = requestAnimationFrame(draw); }
   addEventListener('scroll', schedule, {passive:true});
@@ -193,4 +200,4 @@ emailButton?.addEventListener('click', () => {
   motion.addEventListener('change', schedule);
   new MutationObserver(schedule).observe(document.documentElement, {attributes:true,attributeFilter:['class']});
   schedule();
-})();;
+})();
