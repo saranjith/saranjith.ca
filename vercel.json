@@ -25,6 +25,14 @@
         {
           "key": "X-Frame-Options",
           "value": "DENY"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Content-Security-Policy-Report-Only",
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' https://www.googletagmanager.com 'sha256-/41XpP61ntrjdIkDoiWKWEJszTrhxe6/movcYyfE6Lg=' 'sha256-9IiqOlpvcXwwRiPjY5LIOZRlZ4TKLSvif38dV6qLqWA=' 'sha256-w+H+wUeLccdbObT5GKLTn8iBhLBL4YfRFBScT1QRQKE=' 'sha256-CyAli5hxFdPn77k9SirZTbMGSL55oU2ky9gjJsfH+lo=' 'sha256-7wORnKaRiIiDrwMOuUfI7RdAXeW8JRBthcjrc9/saBk=' 'sha256-A/bQqUwDYg2aMFfbEUsrW33McrNgeFZm1OxvD/bTTMg='; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com; connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.google.com https://vitals.vercel-insights.com; frame-src https://www.googletagmanager.com; manifest-src 'self'"
         }
       ]
     }
