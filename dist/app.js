@@ -73,89 +73,124 @@ emailButton?.addEventListener('click', () => {
   } catch { finish(); }
 })();
 
-// Keep each artwork plane visually continuous between its hero position and process step.
+// Scroll through a deck: the front process card lifts to reveal the next one.
 (() => {
-  const hero = document.querySelector('.hero');
-  const art = hero?.querySelector('.field-diagram');
-  const approach = document.querySelector('#approach');
-  const sources = [...(art?.querySelectorAll('.field-plane') || [])];
-  const destinations = [...(approach?.querySelectorAll('.process-landing svg') || [])];
-  if (!hero || !art || !approach || sources.length !== 4 || destinations.length !== 4) return;
-
+  const stack = document.querySelector('.process-stack');
+  const cards = [...(stack?.querySelectorAll('.process-step') || [])];
+  if (!stack || cards.length !== 4) return;
+  const mapPlanes = [...stack.querySelectorAll('.process-map .field-plane')];
+  const mapLabels = [...stack.querySelectorAll('.process-map .step-annotation')];
+  const setActive = index => {
+    mapPlanes.forEach((plane, planeIndex) => plane.classList.toggle('is-active', planeIndex === index));
+    mapLabels.forEach((label, labelIndex) => label.classList.toggle('is-active', labelIndex === index));
+  };
   const motion = matchMedia('(min-width: 800px) and (prefers-reduced-motion: no-preference)');
-  const svgNS = 'http://www.w3.org/2000/svg';
-  let planes = [];
   let frame = 0;
-  let active = false;
-  const targetViews = destinations.map(svg => svg.getAttribute('viewBox').split(/\s+/).map(Number));
-  const sourcePositions = sources.map(source => {
-    const values = source.querySelector('g')?.getAttribute('transform')?.match(/translate\(([-\d.]+)\s+([-\d.]+)\)/);
-    return values ? {x: Number(values[1]), y: Number(values[2])} : {x: 0, y: 0};
-  });
-  const sourceView = art.getAttribute('viewBox').split(/\s+/).map(Number);
-  const clamp = value => Math.max(0, Math.min(1, value));
-  const interpolate = (from, to, progress) => from + (to - from) * progress;
-
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  function reset() {
+    stack.classList.remove('stack-active', 'stack-entered');
+    setActive(0);
+    cards.forEach(card => {
+      card.style.removeProperty('transform');
+      card.style.removeProperty('opacity');
+      card.style.removeProperty('visibility');
+    });
+  }
   function draw() {
     frame = 0;
-    if (!active) return;
-    const origin = art.getBoundingClientRect();
-    const annotations = art.querySelectorAll('.step-annotation');
-    const heroEnd = hero.getBoundingClientRect().bottom + scrollY;
-    const approachStart = approach.getBoundingClientRect().top + scrollY;
-    const start = Math.max(0, heroEnd - innerHeight * .8);
-    const end = Math.max(start + 220, approachStart - innerHeight * .2);
-    const progress = clamp((scrollY - start) / (end - start));
-    const eased = progress * progress * (3 - 2 * progress);
-    planes.forEach((plane, index) => {
-      const target = destinations[index].getBoundingClientRect();
-      if (annotations[index]) annotations[index].style.opacity = String(1 - eased);
-      plane.setAttribute('viewBox', sourceView.map((value, part) => interpolate(value, targetViews[index][part], eased)).join(' '));
-      const inner = plane.querySelector('.field-plane > g');
-      if (inner) {
-        const {x, y} = sourcePositions[index];
-        const turn = clamp((eased - .55) / .45);
-        inner.setAttribute('transform', `translate(${x} ${y}) skewY(${30 * (1 - turn)})`);
+    if (!motion.matches) { reset(); return; }
+    stack.classList.add('stack-active');
+    const stage = stack.getBoundingClientRect();
+    stack.closest('.approach')?.classList.toggle('process-reached', stage.top < innerHeight * .15);
+    stack.classList.toggle('stack-entered', stage.top < innerHeight * .7 && stage.bottom > 0);
+    const deck = stack.querySelector('.process-steps').getBoundingClientRect();
+    const top = deck.top;
+    const travel = Math.max(1, stage.height - deck.height);
+    const progress = clamp((top - stage.top) / travel, 0, 1) * (cards.length - 1);
+    const current = Math.min(cards.length - 1, Math.floor(progress));
+    const fraction = progress - current;
+    setActive(current);
+    cards.forEach((card, index) => {
+      const distance = index - current;
+      if (distance < 0) {
+        card.style.transform = 'translate3d(0,-105%,0) rotate(-3deg)';
+        card.style.opacity = '0';
+        card.style.visibility = 'hidden';
+      } else if (distance === 0) {
+        card.style.transform = `translate3d(0,${-105 * fraction}%,0) rotate(${-3 * fraction}deg)`;
+        card.style.opacity = '1';
+        card.style.visibility = 'visible';
+      } else {
+        const depth = Math.min(distance, 3);
+        const offset = distance === 1 ? 22 * (1 - fraction) : 22 + (depth - 1) * 9;
+        const scale = distance === 1 ? .96 + .04 * fraction : 1 - .04 * depth;
+        card.style.transform = `translate3d(0,${offset}px,0) scale(${scale})`;
+        card.style.opacity = '1';
+        card.style.visibility = 'visible';
       }
-      plane.style.width = `${interpolate(origin.width, target.width, eased)}px`;
-      plane.style.height = `${interpolate(origin.height, target.height, eased)}px`;
-      const fan = -Math.sin(Math.PI * eased) * (80 + index * 22);
-      plane.style.transform = `translate3d(${interpolate(origin.left, target.left, eased) + fan}px,${interpolate(origin.top, target.top, eased)}px,0)`;
     });
   }
   function schedule() { if (!frame) frame = requestAnimationFrame(draw); }
-  function stop() {
-    active = false;
-    document.documentElement.classList.remove('journey-active');
-    planes.forEach(plane => plane.remove());
-    art.querySelectorAll('.step-annotation').forEach(annotation => annotation.style.removeProperty('opacity'));
-    planes = [];
-    cancelAnimationFrame(frame);
+  addEventListener('scroll', schedule, {passive:true});
+  addEventListener('resize', schedule);
+  motion.addEventListener('change', schedule);
+  schedule();
+})();
+
+// Carry the complete four-layer drawing from the hero into the process map.
+(() => {
+  const source = document.querySelector('.hero-art .field-diagram');
+  const target = document.querySelector('.process-map-diagram');
+  if (!source || !target) return;
+  const motion = matchMedia('(min-width: 1000px) and (prefers-reduced-motion: no-preference)');
+  const moving = source.cloneNode(true);
+  moving.classList.remove('field-diagram');
+  moving.classList.add('process-plane-handoff');
+  moving.setAttribute('aria-hidden', 'true');
+  document.body.append(moving);
+  let frame = 0;
+  const clamp = value => Math.max(0, Math.min(1, value));
+  function draw() {
     frame = 0;
-  }
-  function sync() {
-    if (!motion.matches || document.documentElement.classList.contains('intro-pending') || document.documentElement.classList.contains('intro-running')) {
-      if (active) stop();
+    const intro = document.documentElement.classList.contains('intro-pending') || document.documentElement.classList.contains('intro-running');
+    if (!motion.matches || intro) {
+      source.style.removeProperty('opacity');
+      target.style.removeProperty('opacity');
+      moving.style.display = 'none';
       return;
     }
-    if (!active) {
-      planes = sources.map(source => {
-        const plane = document.createElementNS(svgNS, 'svg');
-        plane.setAttribute('class', 'journey-plane');
-        plane.setAttribute('viewBox', art.getAttribute('viewBox'));
-        plane.setAttribute('aria-hidden', 'true');
-        plane.append(source.cloneNode(true));
-        document.body.append(plane);
-        return plane;
-      });
-      active = true;
-      document.documentElement.classList.add('journey-active');
+    const sourceBox = source.getBoundingClientRect();
+    const targetBox = target.getBoundingClientRect();
+    const sourceBottom = sourceBox.bottom + scrollY;
+    const targetTop = targetBox.top + scrollY;
+    const start = sourceBottom - innerHeight * .6;
+    const end = Math.max(start + 240, targetTop - innerHeight * .45);
+    const progress = clamp((scrollY - start) / (end - start));
+    if (progress <= 0) {
+      source.style.removeProperty('opacity');
+      target.style.opacity = '0';
+      moving.style.display = 'none';
+      return;
     }
-    schedule();
+    if (progress >= 1) {
+      source.style.opacity = '0';
+      target.style.removeProperty('opacity');
+      moving.style.display = 'none';
+      return;
+    }
+    const eased = progress * progress * (3 - 2 * progress);
+    const lerp = (a, b) => a + (b - a) * eased;
+    source.style.opacity = '0';
+    target.style.opacity = '0';
+    moving.style.display = 'block';
+    moving.style.width = `${lerp(sourceBox.width, targetBox.width)}px`;
+    moving.style.height = `${lerp(sourceBox.height, targetBox.height)}px`;
+    moving.style.transform = `translate3d(${lerp(sourceBox.left, targetBox.left)}px,${lerp(sourceBox.top, targetBox.top)}px,0)`;
   }
+  function schedule() { if (!frame) frame = requestAnimationFrame(draw); }
   addEventListener('scroll', schedule, {passive:true});
-  addEventListener('resize', sync);
-  motion.addEventListener('change', sync);
-  new MutationObserver(sync).observe(document.documentElement, {attributes:true,attributeFilter:['class']});
-  sync();
-})();
+  addEventListener('resize', schedule);
+  motion.addEventListener('change', schedule);
+  new MutationObserver(schedule).observe(document.documentElement, {attributes:true,attributeFilter:['class']});
+  schedule();
+})();;
