@@ -148,15 +148,24 @@ emailButton?.addEventListener('click', () => {
   moving.classList.add('process-plane-handoff');
   moving.setAttribute('aria-hidden', 'true');
   document.body.append(moving);
+  const movingPlanes = [...moving.querySelectorAll('.field-plane')];
+  const targetPlanes = [...target.querySelectorAll('.field-plane')];
+  const movingLabels = [...moving.querySelectorAll('.step-annotation')];
   let frame = 0;
+  let renderedProgress = null;
+  let lastTime = 0;
   const clamp = value => Math.max(0, Math.min(1, value));
-  function draw() {
+  // Zero velocity and acceleration at either end of the journey.
+  const settleCurve = value => value * value * value * (value * (value * 6 - 15) + 10);
+  function draw(time) {
     frame = 0;
     const intro = document.documentElement.classList.contains('intro-pending') || document.documentElement.classList.contains('intro-running');
     if (!motion.matches || intro) {
       source.style.removeProperty('opacity');
       target.style.removeProperty('opacity');
       moving.style.display = 'none';
+      renderedProgress = null;
+      lastTime = 0;
       return;
     }
     const sourceBox = source.getBoundingClientRect();
@@ -166,7 +175,14 @@ emailButton?.addEventListener('click', () => {
     const narrow = innerWidth < 1000;
     const start = Math.max(0, sourceBottom - innerHeight * (narrow ? .25 : .6));
     const end = Math.max(start + 240, targetTop - innerHeight * (narrow ? .55 : .45));
-    const progress = clamp((scrollY - start) / (end - start));
+    const desiredProgress = clamp((scrollY - start) / (end - start));
+    const elapsed = lastTime ? Math.min(64, time - lastTime) : 16;
+    lastTime = time;
+    if (renderedProgress === null) renderedProgress = desiredProgress;
+    renderedProgress += (desiredProgress - renderedProgress) * (1 - Math.exp(-elapsed / 90));
+    if (Math.abs(desiredProgress - renderedProgress) < .0001) renderedProgress = desiredProgress;
+    else frame = requestAnimationFrame(draw);
+    const progress = renderedProgress;
     if (progress <= 0) {
       source.style.removeProperty('opacity');
       target.style.opacity = '0';
@@ -179,7 +195,15 @@ emailButton?.addEventListener('click', () => {
       moving.style.display = 'none';
       return;
     }
-    const eased = progress * progress * (3 - 2 * progress);
+    const eased = settleCurve(progress);
+    // Match the destination drawing before swapping it in: no labels or contrast pop.
+    const settle = settleCurve(clamp((progress - .72) / .28));
+    movingPlanes.forEach((plane, index) => {
+      const destination = getComputedStyle(targetPlanes[index]);
+      plane.style.opacity = String(1 + (Number(destination.opacity) - 1) * settle);
+      plane.style.color = `color-mix(in srgb, var(--muted) ${(1 - settle) * 100}%, ${destination.color})`;
+    });
+    movingLabels.forEach(label => { label.style.opacity = String(1 - settle); });
     const lerp = (a, b) => a + (b - a) * eased;
     source.style.opacity = '0';
     target.style.opacity = '0';
